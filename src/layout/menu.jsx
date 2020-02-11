@@ -1,6 +1,6 @@
-import React from 'react'
-import { Icon } from 'antd'
-import { routerData } from '../utils/router'
+import React from 'react';
+import { Icon } from 'antd';
+import { routerData } from '../utils/router';
 
 export const menuData = routerData.map(item => {
   let fatherIcon
