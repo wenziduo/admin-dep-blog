@@ -4,12 +4,13 @@ import {
   Form,
   Select,
   Button,
-  notification,
   Input,
   Upload,
   Icon
 } from 'antd'
-import { fetchClassify, fetchPostAdd, fetchGetQiniuToken } from './service'
+import { fetchClassify, fetchPostAdd, fetchGetQiniuToken, fetchPostEdit } from './service'
+import { Notification } from '../../../utils'
+import { imgeUrlStrArray } from '../../../utils'
 import qiniuUpload from '../../../utils/qiniuUpload'
 import { urlBase } from '../../../utils/qiniuUpload'
 const Option = Select.Option
@@ -25,10 +26,7 @@ class ModalComponent extends React.Component {
   }
   handleNext = async () => {
     if (!this.props.stateProps.markdown) {
-      notification.warn({
-        message: '温馨提示',
-        description: '文章不能空'
-      })
+      Notification.warn('文章不能空')
       return
     }
     this.setState({
@@ -49,25 +47,36 @@ class ModalComponent extends React.Component {
       async (error, values) => {
         if (error) return
         console.log('values', values)
-        const resToken = await fetchGetQiniuToken()
-        const resQiniu = await qiniuUpload(
-          values.imgFile[0].originFileObj,
-          resToken.data
-        )
+        console.log('this.props.stateProps', this.props.stateProps)
+        let imgUrl
+        if (values.imgFile.length > 0 && values.imgFile[0].originFileObj) {
+          const resToken = await fetchGetQiniuToken()
+          const resQiniu = await qiniuUpload(
+            values.imgFile[0].originFileObj,
+            resToken.data
+          )
+          imgUrl = urlBase + resQiniu.key
+        }
+        if (values.imgFile.length > 0 && !values.imgFile[0].originFileObj) {
+          imgUrl = values.imgFile[0].url
+        }
+        const fetchSave = this.props.stateProps._id ? fetchPostEdit : fetchPostAdd
         this.setState({ confirmLoading: true })
-        const res = await fetchPostAdd({
+        const res = await fetchSave({
           ...values,
           content: this.props.stateProps.markdown,
           text: this.props.stateProps.text,
-          imgUrl: urlBase + resQiniu.key,
-          imgFile: undefined
+          imgUrl,
+          imgFile: undefined,
+          _id: this.props.stateProps._id
         })
         this.setState({ confirmLoading: false })
         if (res.success) {
-          notification.success({
-            message: '操作提示',
-            description: '成功发布该文章！'
-          })
+          if (this.props.stateProps._id) {
+            Notification.success('成功修改该文章！')
+          } else {
+            Notification.success('成功发布该文章！')
+          }
           this.handleCancel()
         }
       }
@@ -110,13 +119,13 @@ class ModalComponent extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Item {...formItemLayout} label="文章标题">
               {getFieldDecorator('title', {
-                initialValue: null,
+                initialValue: this.props.stateProps.title,
                 rules: [{ required: true, message: '请填写文章标题!' }]
               })(<Input style={{ width: 220 }} />)}
             </Form.Item>
             <Form.Item {...formItemLayout} label="文章类别">
               {getFieldDecorator('classifyId', {
-                initialValue: null,
+                initialValue: this.props.stateProps.classifyId,
                 rules: [{ required: true, message: '请选择分类!' }]
               })(
                 <Select style={{ width: 220 }}>
@@ -137,7 +146,7 @@ class ModalComponent extends React.Component {
                   }
                   return e && e.fileList
                 },
-                initialValue: [],
+                initialValue: imgeUrlStrArray(this.props.stateProps.imgUrl),
                 rules: [{ required: true, message: '请上传图片!' }]
               })(
                 <Upload

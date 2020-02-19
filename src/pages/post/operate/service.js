@@ -1,30 +1,30 @@
 import request from '../../../utils/request'
 
-export const fetchClassifyList = async function(data) {
+export const fetchPostList = async function(data) {
   return await request({
     method: 'get',
-    url: '/api/classify/find',
+    url: '/api/post/find',
     data
   })
 }
-export const fetchClassifyAdd = async function(data) {
+export const fetchPostAdd = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/create',
+    url: '/api/post/create',
     data
   })
 }
-export const fetchClassifyEdit = async function(data) {
+export const fetchPostEdit = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/update',
+    url: '/api/post/update',
     data
   })
 }
-export const fetchClassifyDel = async function(data) {
+export const fetchPostDel = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/delete',
+    url: '/api/post/delete',
     data
   })
 }

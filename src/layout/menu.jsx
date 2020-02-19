@@ -11,7 +11,7 @@ export const menuData = routerData.map(item => {
     default:
       fatherIcon = <Icon type="user" />
   }
-  const childrenData = item.children.map(ele => ({
+  const childrenData = item.children.filter(item => item.show).map(ele => ({
     ...ele,
     path: `${item.path}${ele.path}`
   }))

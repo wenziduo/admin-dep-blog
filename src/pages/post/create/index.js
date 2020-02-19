@@ -2,6 +2,8 @@ import React from 'react'
 // import MarkdownEditor from '@uiw/react-markdown-editor'
 import MarkdownEditor from 'for-editor'
 import { Button, message, Modal } from 'antd'
+import { fetchPostDetail } from './service'
+import { getUrlParam } from '../../../utils'
 import ModalForm from './modal'
 import './index.less'
 let timer
@@ -15,7 +17,21 @@ class PostCreate extends React.Component {
     }
     this.updateMarkdown = this.updateMarkdown.bind(this)
   }
-
+  componentDidMount() {
+    this.handleDefault()
+  }
+  handleDefault = async () => {
+    const id = getUrlParam('id')
+    console.log('id', id)
+    if (id) {
+      const resp = await fetchPostDetail({ _id: id })
+      this.setState({
+        markdown: resp.data.content,
+        text: resp.data.text,
+        ...resp.data
+      })
+    }
+  }
   updateMarkdown(value) {
     this.setState({ markdown: value })
     this.getText()
@@ -42,7 +58,7 @@ class PostCreate extends React.Component {
           subfield
           height={700}
         />
-        <ModalForm stateProps={this.state} text={this.state.text} />
+        <ModalForm stateProps={this.state} />
       </div>
     )
   }
