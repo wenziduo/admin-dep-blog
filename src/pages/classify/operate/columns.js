@@ -1,16 +1,17 @@
 import React from 'react'
-import { Divider } from 'antd'
+import { Divider, Avatar } from 'antd'
 
 export function columns() {
   return [
     {
-      title: '标题',
-      dataIndex: 'title',
-      width: 100
-    },
-    {
       title: '图片',
       dataIndex: 'imgUrl',
+      width: 100,
+      render: text => <Avatar size={64} src={text} />
+    },
+    {
+      title: '标题',
+      dataIndex: 'title',
       width: 100
     },
     {

@@ -46,8 +46,6 @@ class ModalComponent extends React.Component {
       ['title', 'classifyId', 'imgFile'],
       async (error, values) => {
         if (error) return
-        console.log('values', values)
-        console.log('this.props.stateProps', this.props.stateProps)
         let imgUrl
         if (values.imgFile.length > 0 && values.imgFile[0].originFileObj) {
           const resToken = await fetchGetQiniuToken()
