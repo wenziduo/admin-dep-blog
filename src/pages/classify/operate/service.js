@@ -3,35 +3,35 @@ import request from '../../../utils/request'
 export const fetchClassifyList = async function(data) {
   return await request({
     method: 'get',
-    url: '/api/classify/find',
+    url: '/api/admin/classify/find',
     data
   })
 }
 export const fetchClassifyAdd = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/create',
+    url: '/api/admin/classify/create',
     data
   })
 }
 export const fetchClassifyEdit = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/update',
+    url: '/api/admin/classify/update',
     data
   })
 }
 export const fetchClassifyDel = async function(data) {
   return await request({
     method: 'post',
-    url: '/api/classify/delete',
+    url: '/api/admin/classify/delete',
     data
   })
 }
 export const fetchGetQiniuToken = async function(data) {
   return await request({
     method: 'get',
-    url: '/api/qiniu/getQiniuToken',
+    url: '/api/admin/qiniu/getQiniuToken',
     data
   })
 }
