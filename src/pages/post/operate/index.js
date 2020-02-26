@@ -47,7 +47,7 @@ class Operate extends React.Component {
     const { tableData, tableLoading } = this.state
     return (
       <div className="page page-post-operate">
-        <div style={{ marginTop: 15 }} style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {
             tableData.map(item => (
               <Card
