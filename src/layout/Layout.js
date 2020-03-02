@@ -3,6 +3,7 @@ import { Layout, Menu, Icon, Breadcrumb } from 'antd'
 import { withRouter } from 'react-router'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
 import { menuData, routeData } from './menu'
+import { fetchGetUser } from '../service/global'
 import { Preview } from '../component'
 // import { routerData } from '../utils/router'
 const { Header, Sider, Content } = Layout
@@ -10,6 +11,15 @@ const { Header, Sider, Content } = Layout
 class LayoutComponent extends React.Component {
   state = {
     collapsed: false
+  }
+
+  componentDidMount() {
+    this.handleDefault()
+  }
+
+  handleDefault = async () => {
+    const resp = await fetchGetUser()
+    console.log('layout-resp', resp)
   }
 
   toggle = () => {

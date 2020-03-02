@@ -19,9 +19,10 @@ class Operate extends React.Component {
   loadList = async () => {
     this.setState({ tableLoading: true })
     const resClassify = await fetchPostList()
+    console.log(';resClassify', resClassify)
     this.setState({
       tableLoading: false,
-      tableData: resClassify.data
+      tableData: resClassify.data || []
     })
   }
   handleDel = record => {
