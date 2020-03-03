@@ -4,7 +4,7 @@ export const fetchClassify = async function(data) {
   return await request({
     method: 'get',
     url: '/api/admin-blog/classify/find',
-    params: data
+    data
   })
 }
 export const fetchPostAdd = async function(data) {
@@ -18,14 +18,14 @@ export const fetchGetQiniuToken = async function(data) {
   return await request({
     method: 'get',
     url: '/api/admin-blog/qiniu/getQiniuToken',
-    params: data
+    data
   })
 }
 export const fetchPostDetail = async function(data) {
   return await request({
     method: 'get',
     url: '/api/admin-blog/post/detail',
-    params: data
+    data
   })
 }
 export const fetchPostEdit = async function(data) {
