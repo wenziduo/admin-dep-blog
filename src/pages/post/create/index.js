@@ -45,6 +45,10 @@ class PostCreate extends React.Component {
       })
     }, 300)
   }
+  // 上传图片
+  handleAddImg = (e) => {
+    console.log(e)
+  }
   render() {
     return (
       <div className="page page-postCreate">
@@ -54,6 +58,7 @@ class PostCreate extends React.Component {
           }}
           value={this.state.markdown}
           onChange={this.updateMarkdown}
+          addImg={this.handleAddImg}
           preview
           subfield
           height={700}
