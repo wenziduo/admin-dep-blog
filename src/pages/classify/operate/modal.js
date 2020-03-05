@@ -71,7 +71,7 @@ class ModalComponent extends React.Component {
           res = await fetchClassifyEdit({
             ...values,
             _id: record._id,
-            imgUrl: resQiniu ? urlBase + resQiniu.key : values.imgFile[0].url,
+            imgUrl: resQiniu ? `${urlBase}${resQiniu.key}?imageView2/1/w/80/h/80/interlace/1` : values.imgFile[0].url,
             imgFile: undefined
           })
         }

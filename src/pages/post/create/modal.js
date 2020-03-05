@@ -53,7 +53,7 @@ class ModalComponent extends React.Component {
             values.imgFile[0].originFileObj,
             resToken.data
           )
-          imgUrl = urlBase + resQiniu.key
+          imgUrl = `${urlBase}${resQiniu.key}?imageView2/1/w/120/h/120/interlace/1`
         }
         if (values.imgFile.length > 0 && !values.imgFile[0].originFileObj) {
           imgUrl = values.imgFile[0].url
