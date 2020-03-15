@@ -2,10 +2,10 @@ import React from 'react'
 import { Layout, Menu, Icon, Breadcrumb } from 'antd'
 import { withRouter } from 'react-router'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
-import { menuData, routeData } from './menu'
+import { menuData } from '../utils/menu'
+import { routerData } from '../utils/router'
 import { fetchGetUser } from '../service/global'
 import { Preview } from '../component'
-// import { routerData } from '../utils/router'
 const { Header, Sider, Content } = Layout
 
 class LayoutComponent extends React.Component {
@@ -19,7 +19,6 @@ class LayoutComponent extends React.Component {
 
   handleDefault = async () => {
     const resp = await fetchGetUser()
-    console.log('layout-resp', resp)
   }
 
   toggle = () => {
@@ -44,11 +43,14 @@ class LayoutComponent extends React.Component {
 
   render() {
     const { pathname } = this.props.history.location
-    const openKey = (
-      menuData.find(item =>
-        item.children.some(item2 => item2.path === pathname)
-      ) || {}
-    ).path
+    // 当前路由对象
+    const nowRouter = ( routerData.find(item => item.path === pathname) || {} )
+    // menu选择栏选择
+    const selectKey = nowRouter.key
+    // 当前路由对应的组件名称
+    const routerName = nowRouter.title
+    // menu默认开启
+    const {  menuKey = null } = nowRouter
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <Preview
@@ -62,12 +64,12 @@ class LayoutComponent extends React.Component {
             <Menu
               theme="dark"
               mode="inline"
-              selectedKeys={[pathname]}
-              defaultOpenKeys={[openKey]}
+              selectedKeys={[selectKey]}
+              defaultOpenKeys={[menuKey]}
             >
               {menuData.map(item => (
                 <Menu.SubMenu
-                  key={item.path}
+                  key={item.key}
                   title={
                     <span>
                       {item.Icon}
@@ -77,10 +79,10 @@ class LayoutComponent extends React.Component {
                 >
                   {item.children.map(item2 => (
                     <Menu.Item
-                      key={item2.path}
+                      key={item2.key}
                       onClick={this.handleGoPath.bind(this, item2)}
                     >
-                      {item2.Icon}
+                      {item2.Icon}&nbsp;&nbsp;
                       <span>{item2.title}</span>
                     </Menu.Item>
                   ))}
@@ -98,7 +100,7 @@ class LayoutComponent extends React.Component {
             </Header>
             <div style={{ padding: '0 15px' }}>
               <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>{pathname}</Breadcrumb.Item>
+                <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
               </Breadcrumb>
             </div>
             <Content
@@ -112,7 +114,7 @@ class LayoutComponent extends React.Component {
               }}
             >
               <Switch>
-                {routeData.map(item => (
+                {routerData.map(item => (
                   <Route
                     path={item.path}
                     component={item.component}
