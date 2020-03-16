@@ -7,3 +7,11 @@ export const fetchGetUser = async function(data) {
     data
   })
 }
+// 退出
+export const fetchLogout = async function(data) {
+  return await request({
+    method: 'post',
+    url: '/api/admin-blog/user/logout',
+    data
+  })
+}

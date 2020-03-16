@@ -1,12 +1,14 @@
 import React from 'react'
-import { Layout, Menu, Icon, Breadcrumb } from 'antd'
+import { connect } from 'react-redux'
+import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message } from 'antd'
 import { withRouter } from 'react-router'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
 import { menuData } from '../utils/menu'
 import { routerData } from '../utils/router'
-import { fetchGetUser } from '../service/global'
+import { fetchGetUser, fetchLogout } from '../service/global'
 import { Preview } from '../component'
 const { Header, Sider, Content } = Layout
+
 
 class LayoutComponent extends React.Component {
   state = {
@@ -19,6 +21,8 @@ class LayoutComponent extends React.Component {
 
   handleDefault = async () => {
     const resp = await fetchGetUser()
+    this.props.dispatch({ type: 'appendUserInfo', payload: { userInfo: resp.data } })
+    console.log('this.props.globalState', this.props.globalState)
   }
 
   toggle = () => {
@@ -41,16 +45,43 @@ class LayoutComponent extends React.Component {
   //   }
   // }
 
+  // 退出
+  handleLogout = async () => {
+    Modal.confirm({
+      title: '操作提示',
+      content: <span>正在进行退出操作，是否继续？</span>,
+      onOk: async () => {
+        const resp = await fetchLogout()
+        if (resp.success) {
+          message.success('退出成功')
+          this.handleDefault()
+        }
+      }
+    })
+  }
   render() {
+    const { userInfo } = this.props.globalState
     const { pathname } = this.props.history.location
     // 当前路由对象
-    const nowRouter = ( routerData.find(item => item.path === pathname) || {} )
+    const nowRouter = (routerData.find(item => item.path === pathname) || {})
     // menu选择栏选择
     const selectKey = nowRouter.key
     // 当前路由对应的组件名称
     const routerName = nowRouter.title
     // menu默认开启
-    const {  menuKey = null } = nowRouter
+    const { menuKey = null } = nowRouter
+    // 个人名字默认展示前三个
+    const operateName = (userInfo.userName || '').substr(0, 3)
+    // header右侧的个人中心列表
+    const operateMenu = (
+      <Menu>
+        <Menu.Item>
+          <a style={{ color: 'orangered' }} onClick={this.handleLogout}>
+            退出登录
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <Preview
@@ -59,70 +90,106 @@ class LayoutComponent extends React.Component {
           }}
         />
         <Layout>
-          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-            <div className="logo" />
-            <Menu
-              theme="dark"
-              mode="inline"
-              selectedKeys={[selectKey]}
-              defaultOpenKeys={[menuKey]}
-            >
-              {menuData.map(item => (
-                <Menu.SubMenu
-                  key={item.key}
-                  title={
-                    <span>
-                      {item.Icon}
-                      {item.title}
-                    </span>
-                  }
-                >
-                  {item.children.map(item2 => (
-                    <Menu.Item
-                      key={item2.key}
-                      onClick={this.handleGoPath.bind(this, item2)}
-                    >
-                      {item2.Icon}&nbsp;&nbsp;
-                      <span>{item2.title}</span>
-                    </Menu.Item>
-                  ))}
-                </Menu.SubMenu>
-              ))}
-            </Menu>
-          </Sider>
-          <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
-              <Icon
-                className="trigger"
-                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.toggle}
-              />
-            </Header>
-            <div style={{ padding: '0 15px' }}>
-              <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
-              </Breadcrumb>
+          <Header
+            style={{
+              background: '#1e88e5',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: 50,
+              lineHeight: '50px'
+          }}>
+            <div style={{ width: 200, textAlign: 'center' }}>
+              <strong style={{ color: '#fff', fontSize: 17 }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                  onClick={this.toggle}
+                />
+                &nbsp;
+                逗儿瓢博客后台
+              </strong>
             </div>
-            <Content
+            <div
               style={{
-                margin: 15,
-                marginTop: 0,
-                padding: 15,
-                background: '#fff',
-                minHeight: 280,
-                overflowY: 'auto'
+                marginRight: 15
               }}
             >
-              <Switch>
-                {routerData.map(item => (
-                  <Route
-                    path={item.path}
-                    component={item.component}
-                    key={item.path}
-                  />
+              <Dropdown
+                overlay={operateMenu}
+                placement="bottomLeft"
+              >
+                <Avatar
+                  style={{
+                    color: '#f56a00',        
+                    backgroundColor: '#fde3cf',
+                  }}
+                >
+                  <strong style={{ fontSize: 16 }}>{operateName}</strong>
+                </Avatar>
+              </Dropdown>
+            </div>
+          </Header>
+          <Layout>
+            <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+              <Menu
+                theme="light"
+                mode="inline"
+                selectedKeys={[selectKey]}
+                defaultOpenKeys={[menuKey]}
+                style={{ backgroundColor: '#fff' }}
+              >
+                {menuData.map(item => (
+                  <Menu.SubMenu
+                    key={item.key}
+                    title={
+                      <span>
+                        {item.Icon}
+                        {item.title}
+                      </span>
+                    }
+                  >
+                    {item.children.map(item2 => (
+                      <Menu.Item
+                        key={item2.key}
+                        onClick={this.handleGoPath.bind(this, item2)}
+                      >
+                        {item2.Icon}&nbsp;&nbsp;
+                        <span>{item2.title}</span>
+                      </Menu.Item>
+                    ))}
+                  </Menu.SubMenu>
                 ))}
-              </Switch>
-            </Content>
+              </Menu>
+            </Sider>
+            <div>
+              <div style={{ padding: '0 15px' }}>
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                  <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
+                </Breadcrumb>
+              </div>
+              <Content
+                style={{
+                  margin: 15,
+                  marginTop: 0,
+                  padding: 15,
+                  background: '#fff',
+                  minHeight: 280,
+                  overflowY: 'auto'
+                }}
+              >
+                <Switch>
+                  {routerData.map(item => (
+                    <Route
+                      path={item.path}
+                      component={item.component}
+                      key={item.path}
+                    />
+                  ))}
+                </Switch>
+              </Content>
+            </div>
           </Layout>
         </Layout>
       </div>
@@ -130,4 +197,8 @@ class LayoutComponent extends React.Component {
   }
 }
 
-export default withRouter(LayoutComponent)
+export default withRouter(
+  connect(state => ({
+    globalState: state.globalReducer
+  }))(LayoutComponent)
+)
