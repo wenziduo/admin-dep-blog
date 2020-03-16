@@ -3,9 +3,12 @@ import { routerData } from './router'
 
 const menuShowData = routerData.filter(item => item.menuShow)
 // menu数据添加图标
-const classifyList = menuShowData.map(item => {
+const menuShowList = menuShowData.map(item => {
   let Icon
   switch (item.path) {
+    case '/' || '/home':
+      Icon = <i className="iconfont iconclassify"/>
+      break
     case '/classify/operate':
       Icon = <i className="iconfont iconclassify"/>
       break
@@ -24,9 +27,12 @@ const classifyList = menuShowData.map(item => {
   }
 })
 // menu数据分类
-const classifyRouter = classifyList.filter(item => item.menuKey === 'classify')
-const postRouter = classifyList.filter(item => item.menuKey === 'post')
+const classifyRouter = menuShowList.filter(item => item.menuKey === 'classify')
+const postRouter = menuShowList.filter(item => item.menuKey === 'post')
+// 一级列表
+const rootRouter = menuShowList.filter(item => item.menuKey === 'root')
 export const menuData = [
+  ...rootRouter,
   {
     title: '分类',
     key: 'classify',

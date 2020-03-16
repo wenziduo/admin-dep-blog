@@ -60,6 +60,7 @@ class LayoutComponent extends React.Component {
     })
   }
   render() {
+    console.log('menuData', menuData)
     const { userInfo } = this.props.globalState
     const { pathname } = this.props.history.location
     // 当前路由对象
@@ -122,8 +123,9 @@ class LayoutComponent extends React.Component {
               >
                 <Avatar
                   style={{
-                    color: '#f56a00',        
-                    backgroundColor: '#fde3cf',
+                    color: '#777',        
+                    backgroundColor: '#f0f0f0',
+                    cursor: 'pointer'
                   }}
                 >
                   <strong style={{ fontSize: 16 }}>{operateName}</strong>
@@ -141,29 +143,42 @@ class LayoutComponent extends React.Component {
                 style={{ backgroundColor: '#fff' }}
               >
                 {menuData.map(item => (
-                  <Menu.SubMenu
-                    key={item.key}
-                    title={
-                      <span>
-                        {item.Icon}
-                        {item.title}
-                      </span>
-                    }
-                  >
-                    {item.children.map(item2 => (
-                      <Menu.Item
-                        key={item2.key}
-                        onClick={this.handleGoPath.bind(this, item2)}
-                      >
-                        {item2.Icon}&nbsp;&nbsp;
-                        <span>{item2.title}</span>
-                      </Menu.Item>
-                    ))}
-                  </Menu.SubMenu>
+                  item.children ?
+                  (
+                    <Menu.SubMenu
+                      key={item.key}
+                      title={
+                        <span>
+                          {item.Icon}
+                          {item.title}
+                        </span>
+                      }
+                    >
+                      {item.children.map(item2 => (
+                        <Menu.Item
+                          key={item2.key}
+                          onClick={this.handleGoPath.bind(this, item2)}
+                        >
+                          {item2.Icon}&nbsp;&nbsp;
+                          <span>{item2.title}</span>
+                        </Menu.Item>
+                      ))}
+                    </Menu.SubMenu>
+                  )
+                  :
+                  (
+                    <Menu.Item
+                      key={item.key}
+                      onClick={this.handleGoPath.bind(this, item)}
+                    >
+                      {item.Icon}&nbsp;&nbsp;
+                      <span>{item.title}</span>
+                    </Menu.Item>
+                  )
                 ))}
               </Menu>
             </Sider>
-            <div>
+            <div style={{ flex: 1 }}>
               <div style={{ padding: '0 15px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                   <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
