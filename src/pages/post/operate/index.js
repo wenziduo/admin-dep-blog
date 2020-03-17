@@ -106,20 +106,22 @@ class Operate extends React.Component {
               ))
             }
           </div>
-          <Pagination
-            {...{
-              current: page,
-              pageSize,
-              showQuickJumper: true,
-              showSizeChanger: true,
-              pageSizeOptions: ['10', '20', '50', '100', '500'],
-              total,
-              onChange: this.handleChangePage,
-              onShowSizeChange: this.handleChangePageSize,
-              showTotal: (totalNum, range) =>
-                `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
-            }}
-          />
+          <div style={{ padding: '8px 0 5px 5px' }}>
+            <Pagination
+              {...{
+                current: page,
+                pageSize,
+                showQuickJumper: true,
+                showSizeChanger: true,
+                pageSizeOptions: ['10', '20', '50', '100', '500'],
+                total,
+                onChange: this.handleChangePage,
+                onShowSizeChange: this.handleChangePageSize,
+                showTotal: (totalNum, range) =>
+                  `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
+              }}
+            />
+          </div>
         </Spin>
       </div>
     )
