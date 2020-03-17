@@ -197,6 +197,7 @@ class LayoutComponent extends React.Component {
                 <Switch>
                   {routerData.map(item => (
                     <Route
+                      exact
                       path={item.path}
                       component={item.component}
                       key={item.path}
