@@ -15,13 +15,18 @@ export function columns() {
       width: 100
     },
     {
+      title: '数量',
+      dataIndex: 'count',
+      width: 100
+    },
+    {
       title: '操作',
       dataIndex: 'action',
       width: 100,
       render: (text, record) => (
         <div>
           <a onClick={this.handleEdit.bind(this, record)}>修改</a>
-          <Divider type="vertical" />
+            <Divider type="vertical" />
           <a
             onClick={this.handleDel.bind(this, record)}
             style={{ color: 'orangered' }}

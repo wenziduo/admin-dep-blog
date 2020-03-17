@@ -178,7 +178,7 @@ class LayoutComponent extends React.Component {
                 ))}
               </Menu>
             </Sider>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
               <div style={{ padding: '0 15px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                   <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
@@ -190,8 +190,8 @@ class LayoutComponent extends React.Component {
                   marginTop: 0,
                   padding: 15,
                   background: '#fff',
-                  minHeight: 280,
-                  overflowY: 'auto'
+                  overflowY: 'auto',
+                  flex: 1,
                 }}
               >
                 <Switch>
