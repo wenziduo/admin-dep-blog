@@ -7,7 +7,7 @@ const menuShowList = menuShowData.map(item => {
   let Icon
   switch (item.path) {
     case '/' || '/home':
-      Icon = <i className="iconfont iconclassify"/>
+      Icon = <i className="iconfont iconhome"/>
       break
     case '/classify/operate':
       Icon = <i className="iconfont iconclassify"/>
