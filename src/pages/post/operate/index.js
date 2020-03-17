@@ -113,7 +113,7 @@ class Operate extends React.Component {
                 pageSize,
                 showQuickJumper: true,
                 showSizeChanger: true,
-                pageSizeOptions: ['10', '20', '50', '100', '500'],
+                pageSizeOptions: ['10', '20', '50', '100', '500', '1000', '10000', '50000', '100000'],
                 total,
                 onChange: this.handleChangePage,
                 onShowSizeChange: this.handleChangePageSize,
