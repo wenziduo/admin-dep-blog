@@ -26,9 +26,9 @@ class Operate extends React.Component {
     }
     this.setState({ loading: true })
     const resClassify = await fetchPostList(params)
+    this.setState({ loading: false })
     if (resClassify.success && resClassify.data) {
       this.setState({
-        loading: false,
         data: resClassify.data.data || [],
         page: resClassify.data.page,
         pageSize: resClassify.data.pageSize,
