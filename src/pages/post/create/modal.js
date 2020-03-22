@@ -62,7 +62,7 @@ class ModalComponent extends React.Component {
         this.setState({ confirmLoading: true })
         const res = await fetchSave({
           ...values,
-          content: this.props.stateProps.markdown,
+          markdown: this.props.stateProps.markdown,
           text: this.props.stateProps.text,
           imgUrl,
           imgFile: undefined,
@@ -160,6 +160,16 @@ class ModalComponent extends React.Component {
                   {fileList.length === 0 && <span>+</span>}
                 </Upload>
               )}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="文章简介">
+              {getFieldDecorator('introduction', {
+                initialValue: (
+                  this.props.isEdit ?
+                  this.props.stateProps.introduction :
+                  this.props.stateProps.text.subStr(0, 100)
+                ),
+                rules: [{ required: true, message: '请填写文章简介!' }]
+              })(<Input.TextArea style={{ width: 220 }} rows={4} maxLength={100} />)}
             </Form.Item>
           </Form>
         </Modal>

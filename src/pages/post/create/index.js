@@ -26,10 +26,10 @@ class PostCreate extends React.Component {
     if (id) {
       const resp = await fetchPostDetail({ _id: id })
       this.setState({
-        markdown: resp.data.content,
-        text: resp.data.text,
+        markdown: resp.data.markdown,
+        // text: resp.data.text,
         ...resp.data
-      })
+      }, this.getText)
     }
   }
   updateMarkdown(value) {
@@ -63,7 +63,7 @@ class PostCreate extends React.Component {
           subfield
           height={700}
         />
-        <ModalForm stateProps={this.state} />
+        <ModalForm stateProps={this.state} isEdit={getUrlParam('id')} />
       </div>
     )
   }
