@@ -13,7 +13,8 @@ class PostCreate extends React.Component {
     super()
     this.state = {
       markdown: null,
-      text: null
+      text: null,
+      isEdit: false
     }
     this.updateMarkdown = this.updateMarkdown.bind(this)
   }
@@ -22,8 +23,10 @@ class PostCreate extends React.Component {
   }
   handleDefault = async () => {
     const id = getUrlParam('id')
-    console.log('id', id)
-    if (id) {
+    const isEdit = !!id
+    console.log('isEdit', isEdit)
+    this.setState({ isEdit })
+    if (isEdit) {
       const resp = await fetchPostDetail({ _id: id })
       this.setState({
         markdown: resp.data.markdown,
@@ -63,7 +66,7 @@ class PostCreate extends React.Component {
           subfield
           height={700}
         />
-        <ModalForm stateProps={this.state} isEdit={getUrlParam('id')} />
+        <ModalForm stateProps={this.state} isEdit={this.state.isEdit} onLoad={this.handleDefault} />
       </div>
     )
   }

@@ -4,7 +4,7 @@ const qiniu = require('qiniu-js')
 const putExtra = {
   fname: '',
   params: {},
-  mimeType: ['image/png', 'image/jpeg', 'image/gif']
+  mimeType: ['image/png', 'image/jpeg', 'image/gif', 'text/plain']
 }
 const config = {
   useCdnDomain: true
