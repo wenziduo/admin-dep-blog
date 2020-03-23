@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message } from 'antd'
 import { withRouter } from 'react-router'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import { menuData } from '../utils/menu'
 import { routerData } from '../utils/router'
 import { fetchGetUser, fetchLogout } from '../service/global'
@@ -68,7 +68,7 @@ class LayoutComponent extends React.Component {
     // menu选择栏选择
     const selectKey = nowRouter.key
     // 当前路由对应的组件名称
-    const routerName = nowRouter.title
+    const breadcrumbList = nowRouter.breadcrumb
     // menu默认开启
     const { menuKey = null } = nowRouter
     // 个人名字默认展示前三个
@@ -181,7 +181,13 @@ class LayoutComponent extends React.Component {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
               <div style={{ padding: '0 15px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
-                  <Breadcrumb.Item>{routerName}</Breadcrumb.Item>
+                {
+                  breadcrumbList.map(item => (
+                    <Breadcrumb.Item key={item.title}>
+                      {item.patch} ? <Link to={item.path}>{item.title}</Link> : {item.title}
+                    </Breadcrumb.Item>
+                  ))
+                }
                 </Breadcrumb>
               </div>
               <Content

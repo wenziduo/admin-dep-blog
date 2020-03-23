@@ -11,6 +11,7 @@ export const routerData = [
     path: '/',
     menuShow: true,
     menuKey: 'root',
+    breadcrumb: [{ title: '首页' }],
     component: Home
   },
   {
@@ -19,6 +20,7 @@ export const routerData = [
     path: '/classify/operate',
     menuShow: true,
     menuKey: 'classify',
+    breadcrumb: [{ title: '类别' }, { title: '类别操作' }],
     component: ClassifyOperate
   },
   {
@@ -27,6 +29,7 @@ export const routerData = [
     path: '/post/create',
     menuShow: true,
     menuKey: 'post',
+    breadcrumb: [{ title: '文章' }, { title: '新增文章' }],
     component: PostCreate
   },
   {
@@ -35,6 +38,7 @@ export const routerData = [
     path: '/post/operate/edit',
     menuShow: false,
     menuKey: 'post',
+    breadcrumb: [{ title: '文章' }, { title: '文章操作', path: '/post/operate' }, { title: '修改文章' }],
     component: EditCreate
   },
   {
@@ -43,6 +47,7 @@ export const routerData = [
     path: '/post/operate',
     menuShow: true,
     menuKey: 'post',
+    breadcrumb: [{ title: '文章' }, { title: '文章操作' }],
     component: PostOperate
   }
 ]
