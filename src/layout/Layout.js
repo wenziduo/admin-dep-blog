@@ -184,7 +184,7 @@ class LayoutComponent extends React.Component {
                 {
                   breadcrumbList.map(item => (
                     <Breadcrumb.Item key={item.title}>
-                      {item.patch} ? <Link to={item.path}>{item.title}</Link> : {item.title}
+                      {item.path ? <Link to={item.path}>{item.title}</Link> : item.title}
                     </Breadcrumb.Item>
                   ))
                 }
