@@ -200,51 +200,52 @@ class Home extends React.Component {
             </div>
           </Card>
         </div>
-        <Tabs activeKey={tabsKey} type="line" onChange={this.handleChangeTabsKey}>
-          <Tabs.TabPane tab="统计PV" key="pv">
+        <div style={{ marginTop: 20 }}>
+          <Tabs activeKey={tabsKey} type="line" onChange={this.handleChangeTabsKey}>
+            <Tabs.TabPane tab="统计PV" key="pv">
+              <Table
+                dataSource={pv.data}
+                columns={this.columnsPv}
+                loading={pv.tableLoading}
+                rowKey="_id"
+                size="small"
+                pagination={{
+                  current: pv.page,
+                  pageSize: pv.pageSize,
+                  showQuickJumper: true,
+                  showSizeChanger: true,
+                  pageSizeOptions: ['10', '20', '50', '100'],
+                  total: pv.total,
+                  onChange: this.handlePvChangePage,
+                  onShowSizeChange: this.handlePvChangePageSize,
+                  showTotal: (totalNum, range) =>
+                    `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
+                }}
+              />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="统计VV" key="vv">
             <Table
-              dataSource={pv.data}
-              columns={this.columnsPv}
-              loading={pv.tableLoading}
-              rowKey="_id"
-              size="small"
-              pagination={{
-                current: pv.page,
-                pageSize: pv.pageSize,
-                showQuickJumper: true,
-                showSizeChanger: true,
-                pageSizeOptions: ['10', '20', '50', '100'],
-                total: pv.total,
-                onChange: this.handlePvChangePage,
-                onShowSizeChange: this.handlePvChangePageSize,
-                showTotal: (totalNum, range) =>
-                  `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
-              }}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="统计VV" key="vv">
-          <Table
-              dataSource={vv.data}
-              columns={this.columnsVv}
-              loading={vv.tableLoading}
-              rowKey="_id"
-              size="small"
-              pagination={{
-                current: vv.page,
-                pageSize: vv.pageSize,
-                showQuickJumper: true,
-                showSizeChanger: true,
-                pageSizeOptions: ['10', '20', '50', '100'],
-                total: vv.total,
-                onChange: this.handlePvChangePage,
-                onShowSizeChange: this.handlePvChangePageSize,
-                showTotal: (totalNum, range) =>
-                  `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
-              }}
-            />
-          </Tabs.TabPane>
-        </Tabs>
-        
+                dataSource={vv.data}
+                columns={this.columnsVv}
+                loading={vv.tableLoading}
+                rowKey="_id"
+                size="small"
+                pagination={{
+                  current: vv.page,
+                  pageSize: vv.pageSize,
+                  showQuickJumper: true,
+                  showSizeChanger: true,
+                  pageSizeOptions: ['10', '20', '50', '100'],
+                  total: vv.total,
+                  onChange: this.handlePvChangePage,
+                  onShowSizeChange: this.handlePvChangePageSize,
+                  showTotal: (totalNum, range) =>
+                    `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
+                }}
+              />
+            </Tabs.TabPane>
+          </Tabs>
+        </div>
       </div>
     )
   }
