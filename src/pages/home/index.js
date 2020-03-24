@@ -157,6 +157,7 @@ class Home extends React.Component {
   }
   render() {
     const { vv, pv, tabsKey } = this.state
+    const tableData = tabsKey === 'pv' ? pv : vv
     return (
       <div>
         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -189,49 +190,28 @@ class Home extends React.Component {
         </div>
         <div style={{ marginTop: 20 }}>
           <Tabs activeKey={tabsKey} type="line" onChange={this.handleChangeTabsKey}>
-            <Tabs.TabPane tab="统计PV" key="pv">
-              <Table
-                dataSource={pv.data}
-                columns={this.columnsPv}
-                loading={pv.tableLoading}
-                rowKey="_id"
-                size="small"
-                pagination={{
-                  current: pv.page,
-                  pageSize: pv.pageSize,
-                  showQuickJumper: true,
-                  showSizeChanger: true,
-                  pageSizeOptions: ['10', '20', '50', '100'],
-                  total: pv.total,
-                  onChange: this.handleChangePage,
-                  onShowSizeChange: this.handleChangePageSize,
-                  showTotal: (totalNum, range) =>
-                    `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
-                }}
-              />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="统计VV" key="vv">
-            <Table
-                dataSource={vv.data}
-                columns={this.columnsVv}
-                loading={vv.tableLoading}
-                rowKey="_id"
-                size="small"
-                pagination={{
-                  current: vv.page,
-                  pageSize: vv.pageSize,
-                  showQuickJumper: true,
-                  showSizeChanger: true,
-                  pageSizeOptions: ['10', '20', '50', '100'],
-                  total: vv.total,
-                  onChange: this.handleChangePage,
-                  onShowSizeChange: this.handleChangePageSize,
-                  showTotal: (totalNum, range) =>
-                    `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
-                }}
-              />
-            </Tabs.TabPane>
+            <Tabs.TabPane tab="统计PV" key="pv" />
+            <Tabs.TabPane tab="统计VV" key="vv" />
           </Tabs>
+          <Table
+            dataSource={tableData.data}
+            columns={tabsKey === 'pv' ? this.columnsPv : this.columnsVv}
+            loading={tableData.tableLoading}
+            rowKey="_id"
+            size="small"
+            pagination={{
+              current: tableData.page,
+              pageSize: tableData.pageSize,
+              showQuickJumper: true,
+              showSizeChanger: true,
+              pageSizeOptions: ['10', '20', '50', '100'],
+              total: tableData.total,
+              onChange: this.handleChangePage,
+              onShowSizeChange: this.handleChangePageSize,
+              showTotal: (totalNum, range) =>
+                `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
+            }}
+          />
         </div>
       </div>
     )
