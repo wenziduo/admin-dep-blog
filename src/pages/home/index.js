@@ -104,7 +104,7 @@ class Home extends React.Component {
   componentDidMount() {
     this.loadTableList()
   }
-  loadStatistics = () => {
+  loadStatistics = async () => {
     const resp = await fetchStatistics(params)
   }
   loadTableList = () => {
