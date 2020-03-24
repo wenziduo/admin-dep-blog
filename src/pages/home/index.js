@@ -111,7 +111,9 @@ class Home extends React.Component {
     const { tabsKey } = this.state
     setTimeout(async () => {
       const params = {
-        type: tabsKey === 'pv' ? 0 : (tabsKey === 'vv' ? 1 : 0)
+        type: tabsKey === 'pv' ? 0 : (tabsKey === 'vv' ? 1 : 0),
+        page: this.state[tabsKey].page,
+        pageSize: this.state[tabsKey].pageSize
       }
       this.setState({ [tabsKey]: { ...this.state[tabsKey], tableLoading: true } })
       const resp = await fetchStatistics(params)
@@ -134,35 +136,20 @@ class Home extends React.Component {
       tabsKey: e
     }, this.loadTableList)
   }
-  handlePvChangePage = (page) => {
+  handleChangePage = (page) => {
+    const { tabsKey } = this.state
     this.setState({
-      pv: {
-        ...this.state.pv,
+      [tabsKey]: {
+        ...this.state[tabsKey],
         page
       }
     }, this.loadTableList)
   }
-  handlePvChangePageSize = (pageSize, page) => {
+  handleChangePageSize = (pageSize, page) => {
+    const { tabsKey } = this.state
     this.setState({
-      pv: {
-        ...this.state.pv,
-        page,
-        pageSize
-      }
-    }, this.loadTableList)
-  }
-  handleVvChangePage = (page) => {
-    this.setState({
-      vv: {
-        ...this.state.pv,
-        page
-      }
-    }, this.loadTableList)
-  }
-  handleVvChangePageSize = (pageSize, page) => {
-    this.setState({
-      vv: {
-        ...this.state.vv,
+      [tabsKey]: {
+        ...this.state[tabsKey],
         page,
         pageSize
       }
@@ -216,8 +203,8 @@ class Home extends React.Component {
                   showSizeChanger: true,
                   pageSizeOptions: ['10', '20', '50', '100'],
                   total: pv.total,
-                  onChange: this.handlePvChangePage,
-                  onShowSizeChange: this.handlePvChangePageSize,
+                  onChange: this.handleChangePage,
+                  onShowSizeChange: this.handleChangePageSize,
                   showTotal: (totalNum, range) =>
                     `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
                 }}
@@ -237,8 +224,8 @@ class Home extends React.Component {
                   showSizeChanger: true,
                   pageSizeOptions: ['10', '20', '50', '100'],
                   total: vv.total,
-                  onChange: this.handlePvChangePage,
-                  onShowSizeChange: this.handlePvChangePageSize,
+                  onChange: this.handleChangePage,
+                  onShowSizeChange: this.handleChangePageSize,
                   showTotal: (totalNum, range) =>
                     `显示 ${range[0]} 到 ${range[1]},共有 ${totalNum} 条记录`,
                 }}
