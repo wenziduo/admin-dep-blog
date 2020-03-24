@@ -105,7 +105,7 @@ class Home extends React.Component {
     this.loadTableList()
   }
   loadStatistics = async () => {
-    const resp = await fetchStatistics(params)
+    const resp = await fetchStatistics()
   }
   loadTableList = () => {
     const { tabsKey } = this.state
