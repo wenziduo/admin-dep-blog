@@ -171,7 +171,7 @@ class LayoutComponent extends React.Component {
                       key={item.key}
                       onClick={this.handleGoPath.bind(this, item)}
                     >
-                      {item.Icon}&nbsp;&nbsp;
+                      {!this.state.collapsed && <>{item.Icon}&nbsp;&nbsp;</>}
                       <span>{item.title}</span>
                     </Menu.Item>
                   )
