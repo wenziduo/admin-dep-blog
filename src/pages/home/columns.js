@@ -15,7 +15,7 @@ export function columnsPv() {
       title: '访问时间',
       dataIndex: 'createTime',
       width: 100,
-      render: text => moment(text).format('YYYY-MM-DD HH:mm')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
   ]
 }
@@ -36,7 +36,7 @@ export function columnsVv() {
       title: '访问时间',
       dataIndex: 'createTime',
       width: 100,
-      render: text => moment(text).format('YYYY-MM-DD HH:mm')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
   ]
 }
