@@ -16,7 +16,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route
           path="/"
-          render={
+          component={
             () => (
               <Layout>
                 {routerData.map(item => (
