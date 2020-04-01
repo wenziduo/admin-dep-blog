@@ -200,16 +200,9 @@ class LayoutComponent extends React.Component {
                   flex: 1,
                 }}
               >
-                <Switch>
-                  {routerData.map(item => (
-                    <Route
-                      exact
-                      path={item.path}
-                      component={item.component}
-                      key={item.path}
-                    />
-                  ))}
-                </Switch>
+                {
+                  this.props.children
+                }
               </Content>
             </div>
           </Layout>

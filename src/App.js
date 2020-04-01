@@ -5,6 +5,7 @@ import Login from './pages/login'
 import Layout from './layout/Layout'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
+import { routerData } from './utils/router'
 import './App.less'
 
 function App() {
@@ -12,10 +13,24 @@ function App() {
     <ConfigProvider locale={zhCN}>
       <div className="App">
         <Router>
-          <Switch>
-            <Route path="/login" component={Login} />
-            <Route path="/" component={Layout} />
-          </Switch>
+        <Route path="/login" component={Login} />
+        <Route
+          path="/"
+          render={
+            () => (
+              <Layout>
+                {routerData.map(item => (
+                  <Route
+                    exact
+                    path={item.path}
+                    component={item.component}
+                    key={item.path}
+                  />
+                ))}
+              </Layout>
+            )
+          }
+        />
         </Router>
       </div>
     </ConfigProvider>
