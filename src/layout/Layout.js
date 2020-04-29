@@ -60,7 +60,6 @@ class LayoutComponent extends React.Component {
     })
   }
   render() {
-    console.log('menuData', menuData)
     const { userInfo } = this.props.globalState
     const { pathname } = this.props.history.location
     // 当前路由对象
