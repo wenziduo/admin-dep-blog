@@ -69,6 +69,7 @@ class LayoutComponent extends React.Component {
     const selectKey = nowRouter.key
     // 当前路由对应的组件名称
     const breadcrumbList = nowRouter.breadcrumb
+    console.log('breadcrumbList', breadcrumbList)
     // menu默认开启
     const { menuKey = null } = nowRouter
     // 个人名字默认展示前三个

@@ -13,9 +13,10 @@ function App() {
     <ConfigProvider locale={zhCN}>
       <div className="App">
         <Router>
-        <Route path="/login" component={Login} />
+        <Route path="/login" component={Login} exact />
         <Route
           path="/"
+          exact
           component={
             () => (
               <Layout>
