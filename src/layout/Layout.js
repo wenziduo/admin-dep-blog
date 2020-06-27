@@ -60,7 +60,6 @@ class LayoutComponent extends React.Component {
     })
   }
   render() {
-    console.log('menuData', menuData)
     const { userInfo } = this.props.globalState
     const { pathname } = this.props.history.location
     // 当前路由对象
@@ -69,6 +68,7 @@ class LayoutComponent extends React.Component {
     const selectKey = nowRouter.key
     // 当前路由对应的组件名称
     const breadcrumbList = nowRouter.breadcrumb
+    console.log('breadcrumbList', breadcrumbList)
     // menu默认开启
     const { menuKey = null } = nowRouter
     // 个人名字默认展示前三个
@@ -200,16 +200,9 @@ class LayoutComponent extends React.Component {
                   flex: 1,
                 }}
               >
-                <Switch>
-                  {routerData.map(item => (
-                    <Route
-                      exact
-                      path={item.path}
-                      component={item.component}
-                      key={item.path}
-                    />
-                  ))}
-                </Switch>
+                {
+                  this.props.children
+                }
               </Content>
             </div>
           </Layout>
