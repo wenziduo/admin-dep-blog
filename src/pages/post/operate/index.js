@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Table, Card, Icon, Avatar, Spin, Pagination } from 'antd'
-import { columns } from './columns'
+// import { columns } from './columns'
 import { fetchPostList, fetchPostDel } from './service'
 import { Notification } from '../../../utils'
 import moment from 'moment'
