@@ -16,7 +16,6 @@ function App() {
         <Route path="/login" component={Login} exact />
         <Route
           path="/"
-          exact
           component={
             () => (
               <Layout>
