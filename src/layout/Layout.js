@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useState, useEffect, useCallback } from 'react'
+// import { connect } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message } from 'antd'
 import { withRouter } from 'react-router'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
@@ -7,7 +8,6 @@ import { menuData } from '../utils/menu'
 import { routerData } from '../utils/router'
 import { fetchGetUser, fetchLogout } from '../service/global'
 import { Preview } from '../component'
-import { useEffect } from 'react'
 const { Header, Sider, Content } = Layout
 
 
@@ -15,16 +15,19 @@ function LayoutComponent(props) {
   const initState = {
     collapsed: false
   }
+  const globalState = useSelector(state => state.globalReducer);
+  const { userInfo } = globalState
   const [state, setState] = useState(initState);
-
-  useEffect(() => {
-    handleDefault()
-  })
-
+  const dispatch = useDispatch();
   const handleDefault = async () => {
     const resp = await fetchGetUser()
-    props.dispatch({ type: 'appendUserInfo', payload: { userInfo: resp.data } })
+    console.log('resp', resp)
+    // dispatch({ type: 'appendUserInfo', payload: { userInfo: resp.data } })
   }
+
+  useEffect(() => {
+    // handleDefault()
+  }, [])
 
   const toggle = () => {
     setState({
@@ -60,7 +63,7 @@ function LayoutComponent(props) {
       }
     })
   }
-  const { userInfo } = props.globalState
+  
   const { pathname } = props.history.location
   console.log('pathname', pathname)
   // 当前路由对象
@@ -68,7 +71,7 @@ function LayoutComponent(props) {
   // menu选择栏选择
   const selectKey = nowRouter.key
   // 当前路由对应的组件名称
-  const breadcrumbList = nowRouter.breadcrumb
+  const breadcrumbList = nowRouter.breadcrumb || []
   // menu默认开启
   const { menuKey = null } = nowRouter
   // 个人名字默认展示前三个
@@ -209,7 +212,8 @@ function LayoutComponent(props) {
 }
 
 export default withRouter(
-  connect(state => ({
-    globalState: state.globalReducer
-  }))(LayoutComponent)
+  LayoutComponent
+  // connect(state => ({
+  //   globalState: state.globalReducer
+  // }))(LayoutComponent)
 )
