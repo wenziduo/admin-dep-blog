@@ -13,24 +13,28 @@ function App() {
     <ConfigProvider locale={zhCN}>
       <div className="App">
         <Router>
-        <Route path="/login" component={Login} exact />
-        <Route
-          path="/"
-          component={
-            () => (
-              <Layout>
-                {routerData.map(item => (
-                  <Route
-                    exact
-                    path={item.path}
-                    component={item.component}
-                    key={item.path}
-                  />
-                ))}
-              </Layout>
-            )
-          }
-        />
+          <Switch>
+            <Route path="/login" component={Login} exact />
+            <Route
+              path="/"
+              component={
+                () => (
+                  <Layout>
+                    <Switch>
+                      {routerData.map(item => (
+                        <Route
+                          exact
+                          path={item.path}
+                          component={item.component}
+                          key={item.path}
+                        />
+                      ))}
+                    </Switch>
+                  </Layout>
+                )
+              }
+            />
+          </Switch>
         </Router>
       </div>
     </ConfigProvider>

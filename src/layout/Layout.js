@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 // import { connect } from 'react-redux'
 import { useDispatch, useSelector } from "react-redux";
-import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message } from 'antd'
+import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message, Spin } from 'antd'
 import { withRouter } from 'react-router'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import { menuData } from '../utils/menu'
@@ -10,24 +10,17 @@ import { fetchGetUser, fetchLogout } from '../service/global'
 import { Preview } from '../component'
 const { Header, Sider, Content } = Layout
 
-
-function LayoutComponent(props) {
+function LayoutComponent({
+  handleDefault,
+  history,
+  children
+}) {
   const initState = {
     collapsed: false
   }
   const globalState = useSelector(state => state.globalReducer);
   const { userInfo } = globalState
   const [state, setState] = useState(initState);
-  const dispatch = useDispatch();
-  const handleDefault = async () => {
-    const resp = await fetchGetUser()
-    console.log('resp', resp)
-    // dispatch({ type: 'appendUserInfo', payload: { userInfo: resp.data } })
-  }
-
-  useEffect(() => {
-    // handleDefault()
-  }, [])
 
   const toggle = () => {
     setState({
@@ -36,18 +29,8 @@ function LayoutComponent(props) {
   }
 
   const handleGoPath = record => {
-    props.history.push({ pathname: record.path })
+    history.push({ pathname: record.path })
   }
-
-  // getBreadcrumb = (cloneData, path, arrayBreadcrumb) => {
-  //   const { pathname } = props.history.location
-  //   for (let i=0; i<cloneData.length;i++) {
-  //     const children = cloneData[i].children
-  //     if (cloneData[i].path === path) {
-  //       cloneData
-  //     }
-  //   }
-  // }
 
   // 退出
   const handleLogout = async () => {
@@ -63,9 +46,8 @@ function LayoutComponent(props) {
       }
     })
   }
-  
-  const { pathname } = props.history.location
-  console.log('pathname', pathname)
+
+  const { pathname } = history.location
   // 当前路由对象
   const nowRouter = (routerData.find(item => item.path === pathname) || {})
   // menu选择栏选择
@@ -86,7 +68,6 @@ function LayoutComponent(props) {
       </Menu.Item>
     </Menu>
   )
-  console.log('breadcrumbList', breadcrumbList)
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <Preview />
@@ -100,7 +81,7 @@ function LayoutComponent(props) {
             justifyContent: 'space-between',
             height: 50,
             lineHeight: '50px'
-        }}>
+          }}>
           <div style={{ width: 200, textAlign: 'center' }}>
             <strong style={{ color: '#fff', fontSize: 17 }}>
               <Icon
@@ -123,7 +104,7 @@ function LayoutComponent(props) {
             >
               <Avatar
                 style={{
-                  color: '#777',        
+                  color: '#777',
                   backgroundColor: '#f0f0f0',
                   cursor: 'pointer'
                 }}
@@ -144,50 +125,50 @@ function LayoutComponent(props) {
             >
               {menuData.map(item => (
                 item.children ?
-                (
-                  <Menu.SubMenu
-                    key={item.key}
-                    title={
-                      <span>
-                        {item.Icon}
-                        {item.title}
-                      </span>
-                    }
-                  >
-                    {item.children.map(item2 => (
-                      <Menu.Item
-                        key={item2.key}
-                        onClick={handleGoPath.bind(this, item2)}
-                      >
-                        {item2.Icon}&nbsp;&nbsp;
-                        <span>{item2.title}</span>
-                      </Menu.Item>
-                    ))}
-                  </Menu.SubMenu>
-                )
-                :
-                (
-                  <Menu.Item
-                    key={item.key}
-                    onClick={handleGoPath.bind(this, item)}
-                  >
-                    {!state.collapsed && <>{item.Icon}&nbsp;&nbsp;</>}
-                    <span>{item.title}</span>
-                  </Menu.Item>
-                )
+                  (
+                    <Menu.SubMenu
+                      key={item.key}
+                      title={
+                        <span>
+                          {item.Icon}
+                          {item.title}
+                        </span>
+                      }
+                    >
+                      {item.children.map(item2 => (
+                        <Menu.Item
+                          key={item2.key}
+                          onClick={handleGoPath.bind(this, item2)}
+                        >
+                          {item2.Icon}&nbsp;&nbsp;
+                          <span>{item2.title}</span>
+                        </Menu.Item>
+                      ))}
+                    </Menu.SubMenu>
+                  )
+                  :
+                  (
+                    <Menu.Item
+                      key={item.key}
+                      onClick={handleGoPath.bind(this, item)}
+                    >
+                      {!state.collapsed && <>{item.Icon}&nbsp;&nbsp;</>}
+                      <span>{item.title}</span>
+                    </Menu.Item>
+                  )
               ))}
             </Menu>
           </Sider>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{ padding: '0 15px' }}>
               <Breadcrumb style={{ margin: '16px 0' }}>
-              {
-                breadcrumbList.map(item => (
-                  <Breadcrumb.Item key={item.title}>
-                    {item.path ? <Link to={item.path}>{item.title}</Link> : item.title}
-                  </Breadcrumb.Item>
-                ))
-              }
+                {
+                  breadcrumbList.map(item => (
+                    <Breadcrumb.Item key={item.title}>
+                      {item.path ? <Link to={item.path}>{item.title}</Link> : item.title}
+                    </Breadcrumb.Item>
+                  ))
+                }
               </Breadcrumb>
             </div>
             <Content
@@ -201,7 +182,7 @@ function LayoutComponent(props) {
               }}
             >
               {
-                props.children
+                children
               }
             </Content>
           </div>
@@ -211,9 +192,29 @@ function LayoutComponent(props) {
   )
 }
 
-export default withRouter(
-  LayoutComponent
-  // connect(state => ({
-  //   globalState: state.globalReducer
-  // }))(LayoutComponent)
-)
+const LayoutRouterComponent = withRouter(LayoutComponent)
+
+const IndexPage = ({ children }) => {
+  const globalState = useSelector(state => state.globalReducer);
+  const { userInfo } = globalState
+  const isPassLayout = Object.keys(userInfo).length > 0;
+  const dispatch = useDispatch();
+  const handleDefault = useCallback(async () => {
+    const resp = await fetchGetUser()
+    dispatch({ type: 'appendUserInfo', payload: { userInfo: resp.data || {} } })
+  }, [dispatch])
+
+  useEffect(() => {
+    handleDefault()
+  }, [handleDefault])
+  return (
+    isPassLayout ?
+      (<LayoutRouterComponent children={children} handleDefault={handleDefault} />) :
+      (
+        <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Spin spinning={true} />
+        </div>
+      )
+  )
+}
+export default IndexPage
