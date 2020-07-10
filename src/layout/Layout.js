@@ -212,7 +212,7 @@ const IndexPage = ({ children }) => {
       (<LayoutRouterComponent children={children} handleDefault={handleDefault} />) :
       (
         <div style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spin spinning={true} />
+          <Spin spinning={true} size="large" />
         </div>
       )
   )
