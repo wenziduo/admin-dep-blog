@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message, Spin } from 'antd'
 import { withRouter } from 'react-router'
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { menuData } from '../utils/menu'
 import { routerData } from '../utils/router'
 import { fetchGetUser, fetchLogout } from '../service/global'
