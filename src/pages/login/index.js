@@ -16,7 +16,6 @@ const Login = ({
       window.location.replace('/')
     }
   }
-  const { validateFields } = form;
   return (
     <div className="page page-login">
       <div className="page-login-box">

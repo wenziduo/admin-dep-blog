@@ -15,6 +15,7 @@ import qiniuUpload, { urlBase } from '../../../utils/qiniuUpload'
 import { fileTemplete } from '../../../utils'
 const ModalComponent = ({
   onLoad,
+  title,
 }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false)
@@ -82,7 +83,6 @@ const ModalComponent = ({
   const handleUploadChange = ({ file, fileList }) => {
     file.status = 'success'
   }
-  const { getFieldDecorator } = form
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -103,30 +103,25 @@ const ModalComponent = ({
         width="500px"
       >
         <Form
-          onSubmit={e => {
-            e.preventDefault()
-            handleSubmit()
+          onSubmit={handleSubmit}
+          initialValue={{
+            title,
+            imgFile: record.imgUrl ? [fileTemplete(record.imgUrl)] : [],
+            rules: [{ required: true, message: '请上传图片!' }]
           }}
+          form={form}
         >
-          <Form.Item {...formItemLayout} label="类别名称">
-            {getFieldDecorator('title', {
-              initialValue: record.title,
-              rules: [{ required: true, message: '请填写类别名称!' }]
-            })(<Input style={{ width: 220 }} />)}
+          <Form.Item {...formItemLayout} label="类别名称" name="title" rules={[{ required: true, message: '请填写类别名称!' }]}>
+            <Input style={{ width: 220 }} />
           </Form.Item>
-          <Form.Item {...formItemLayout} label="标题图片">
-            {getFieldDecorator('imgFile', {
-              valuePropName: 'fileList',
-              getValueFromEvent: e => {
-                if (Array.isArray(e)) {
-                  return e
-                }
-                return e && e.fileList
-              },
-              initialValue: record.imgUrl ? [fileTemplete(record.imgUrl)] : [],
-              rules: [{ required: true, message: '请上传图片!' }]
-            })(
-              <Upload
+          <Form.Item {...formItemLayout} label="标题图片" name="imgFile" rules={[{ required: true, message: '请上传图片!' }]} valuePropName="fileList"
+          getValueFromEvent={e => {
+            if (Array.isArray(e)) {
+              return e
+            }
+            return e && e.fileList
+          }}>
+            <Upload
                 accept="image/*"
                 listType="picture-card"
                 customRequest={handlecCustomRequest}
@@ -139,7 +134,6 @@ const ModalComponent = ({
                 {(form.getFieldValue('imgFile') || []).length ===
                   0 && <span>+</span>}
               </Upload>
-            )}
           </Form.Item>
         </Form>
       </Modal>

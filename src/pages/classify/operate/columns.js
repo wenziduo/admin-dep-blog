@@ -1,7 +1,7 @@
 import React from 'react'
 import { Divider, Avatar } from 'antd'
 
-export function columns() {
+export function columns(handleEdit, handleDel) {
   return [
     {
       title: '图片',
@@ -25,10 +25,10 @@ export function columns() {
       width: 100,
       render: (text, record) => (
         <div>
-          <a onClick={this.handleEdit.bind(this, record)}>修改</a>
+          <a onClick={handleEdit.bind(this, record)}>修改</a>
             <Divider type="vertical" />
           <a
-            onClick={this.handleDel.bind(this, record)}
+            onClick={handleDel.bind(this, record)}
             style={{ color: 'orangered' }}
           >
             删除

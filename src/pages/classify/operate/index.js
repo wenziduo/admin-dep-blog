@@ -1,77 +1,74 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table } from 'antd'
 import { columns } from './columns'
 import ModalForm from './modal'
 import { fetchClassifyList, fetchClassifyDel } from './service'
 import './index.less'
 
-class Classify extends React.Component {
-  state = {
-    tableData: [],
-    tableLoading: false
-  }
-  componentDidMount() {
-    this.loadList()
-  }
-  loadList = async () => {
-    this.setState({ tableLoading: true })
+const Classify = ({
+
+}) => {
+  let modalFormNode;
+  const [tableData, setTableData] = useState([])
+  const [tableLoading, setTableLoading] = useState(false)
+  useEffect(() => {
+    loadList()
+  }, [])
+  const loadList = async () => {
+    setTableLoading(true)
     const resClassify = await fetchClassifyList()
-    this.setState({
-      tableLoading: false,
-      tableData: resClassify.data
-    })
+    setTableLoading(false)
+    setTableData(resClassify.data)
   }
-  handleAdd = () => {
-    this.modalFormNode.setData({
+  const handleAdd = () => {
+    modalFormNode.setData({
       type: 'add'
     })
   }
-  handleEdit = record => {
-    this.modalFormNode.setData({
+  const handleEdit = record => {
+    modalFormNode.setData({
       record,
       type: 'edit'
     })
   }
-  handleDel = record => {
+  const handleDel = record => {
     Modal.confirm({
       title: '操作提示',
       content: <span style={{ color: 'orangered' }}>是否删除该类别？</span>,
       onOk: async () => {
         const resDel = await fetchClassifyDel({ _id: record._id })
         if (resDel.success) {
-          this.loadList()
+          loadList()
         }
       }
     })
   }
-  render() {
-    const { tableData, tableLoading } = this.state
-    return (
-      <div className="page page-postCreate">
-        <ModalForm
-          wrappedComponentRef={node => {
-            this.modalFormNode = node
-          }}
-          onLoad={this.loadList}
-        />
-        <div>
-          <Button type="primary" onClick={this.handleAdd}>
-            新增
-          </Button>
-        </div>
-        <div style={{ marginTop: 15 }}>
-          <Table
-            dataSource={tableData}
-            columns={columns.call(this)}
-            loading={tableLoading}
-            size="default"
-            rowKey="_id"
-            pagination={false}
-          />
-        </div>
+  const newCcolumns = columns(handleEdit, handleDel);
+  return (
+    <div className="page page-postCreate">
+      <ModalForm
+        wrappedComponentRef={node => {
+          modalFormNode = node
+        }}
+        onLoad={loadList}
+      />
+      <div>
+        <Button type="primary" onClick={handleAdd}>
+          新增
+        </Button>
       </div>
-    )
-  }
+      <div style={{ marginTop: 15 }}>
+        <Table
+          dataSource={tableData}
+          columns={newCcolumns}
+          loading={tableLoading}
+          size="default"
+          rowKey="_id"
+          pagination={false}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default Classify
