@@ -1,13 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   Form,
-  Select,
-  Button,
   notification,
   Input,
   Upload,
-  Icon
 } from 'antd'
 import {
   fetchClassifyAdd,
@@ -15,40 +12,32 @@ import {
   fetchGetQiniuToken
 } from './service'
 import qiniuUpload, { urlBase } from '../../../utils/qiniuUpload'
-// import { urlBase } from '../../../utils/qiniuUpload'
 import { fileTemplete } from '../../../utils'
-const Option = Select.Option
-
-const initState = {
-  visible: false,
-  record: {},
-  confirmLoading: false,
-  type: ''
-}
-class ModalComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = initState
+const ModalComponent = ({
+  onLoad,
+}) => {
+  const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false)
+  const [record, setRecord] = useState({})
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [type, setType] = useState(null)
+  const setData = data => {
+    setRecord(data.record)
+    setType(data.type)
+    setVisible(true)
   }
-  setData = data => {
-    this.setState({
-      ...data,
-      visible: true
-    })
+  const handleCancel = () => {
+    setVisible(false)
+    setRecord({})
+    setConfirmLoading(false)
+    setType(null)
+    form.resetFields()
   }
-  handleCancel = () => {
-    this.setState({
-      ...initState
-    })
-    this.props.form.resetFields()
-  }
-  handleSubmit = () => {
-    this.props.form.validateFields(
+  const handleSubmit = () => {
+    form.validateFields(
       ['title', 'imgFile'],
       async (error, values) => {
         if (error) return
-        console.log('values', values)
-        const { type, record } = this.state
         // 编辑的时候
         let resQiniu
         if (!values.imgFile[0].url) {
@@ -58,7 +47,7 @@ class ModalComponent extends React.Component {
             resToken.data
           )
         }
-        this.setState({ confirmLoading: true })
+        setConfirmLoading(true)
         let res
         if (type === 'add') {
           res = await fetchClassifyAdd({
@@ -75,53 +64,48 @@ class ModalComponent extends React.Component {
             imgFile: undefined
           })
         }
-        this.setState({ confirmLoading: false })
+        setConfirmLoading(false)
         if (res.success) {
           notification.success({
             message: '操作提示',
             description: '操作成功！'
           })
-          this.handleCancel()
-          this.props.onLoad()
+          handleCancel()
+          onLoad()
         }
       }
     )
   }
-  handlecCustomRequest = async params => {
-    console.log('params', params)
+  const handlecCustomRequest = async params => {
     return params
   }
-  handleUploadChange = ({ file, fileList }) => {
+  const handleUploadChange = ({ file, fileList }) => {
     file.status = 'success'
   }
-  render() {
-    const { getFieldDecorator } = this.props.form
-    const { visible, record, confirmLoading, type } = this.state
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
+  const { getFieldDecorator } = form
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 }
     }
-    // console.log('imgFile', this.props.form.getFieldValue('imgFile'))
-    // const fileList = this.props.form.getFieldValue('imgFile') || []
-    return (
-      <Modal
+  }
+  return (
+    <Modal
         visible={visible}
         confirmLoading={confirmLoading}
         title={type === 'add' ? '新增分类' : '编辑分类'}
-        onCancel={this.handleCancel}
-        onOk={this.handleSubmit}
+        onCancel={handleCancel}
+        onOk={handleSubmit}
         width="500px"
       >
         <Form
           onSubmit={e => {
             e.preventDefault()
-            this.handleSubmit()
+            handleSubmit()
           }}
         >
           <Form.Item {...formItemLayout} label="类别名称">
@@ -145,22 +129,21 @@ class ModalComponent extends React.Component {
               <Upload
                 accept="image/*"
                 listType="picture-card"
-                customRequest={this.handlecCustomRequest}
+                customRequest={handlecCustomRequest}
                 onPreview={e => {
                   console.log('e.thumbUrl', e)
                   window.open(e.thumbUrl)
                 }}
-                onChange={this.handleUploadChange}
+                onChange={handleUploadChange}
               >
-                {(this.props.form.getFieldValue('imgFile') || []).length ===
+                {(form.getFieldValue('imgFile') || []).length ===
                   0 && <span>+</span>}
               </Upload>
             )}
           </Form.Item>
         </Form>
       </Modal>
-    )
-  }
+  )
 }
 
-export default Form.create()(ModalComponent)
+export default ModalComponent

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 // import { connect } from 'react-redux'
 import { useDispatch, useSelector } from "react-redux";
-import { Layout, Menu, Icon, Breadcrumb, Avatar, Dropdown, Modal, message, Spin } from 'antd'
+import { Layout, Menu, Breadcrumb, Avatar, Dropdown, Modal, message, Spin } from 'antd'
+import { Icon } from '../component'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import { menuData } from '../utils/menu'
@@ -85,8 +86,7 @@ function LayoutComponent({
           <div style={{ width: 200, textAlign: 'center' }}>
             <strong style={{ color: '#fff', fontSize: 17 }}>
               <Icon
-                className="trigger"
-                type={state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                type={state.collapsed ? 'icon-unfold' : 'icon-fold'}
                 onClick={toggle}
               />
               &nbsp;

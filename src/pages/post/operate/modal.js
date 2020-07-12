@@ -3,11 +3,10 @@ import {
   Modal,
   Form,
   Select,
-  Button,
   notification,
   Input,
   Upload,
-  Icon
+  
 } from 'antd'
 import {
   fetchClassifyAdd,

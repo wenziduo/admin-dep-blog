@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Table, Card, Icon, Avatar, Spin, Pagination } from 'antd'
+import { Modal, Card, Avatar, Spin, Pagination } from 'antd'
 // import { columns } from './columns'
 import { fetchPostList, fetchPostDel } from './service'
 import { Notification } from '../../../utils'
