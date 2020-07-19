@@ -8,9 +8,12 @@ import './index.less';
 let timer;
 
 const PostCreate = () => {
+  let markdownNode;
   const dispatch = useDispatch();
   const thisStore = useSelector(state => state.page_post_create_reducer);
-  const { markdown, text, isEdit } = thisStore;
+  const {
+    app: { markdown, text, isEdit },
+  } = thisStore;
   const setPropsApp = args => {
     dispatch(actions.changeApp(args));
   };
@@ -32,9 +35,10 @@ const PostCreate = () => {
   // 获取解析后的text
   const getText = () => {
     clearTimeout(timer);
+    let markdownEle = markdownNode
     timer = setTimeout(() => {
       setPropsApp({
-        text: markdownNode.$blockPreview.current.innerText,
+        text: markdownEle.$blockPreview.current.innerText,
       });
     }, 300);
   };
@@ -42,6 +46,7 @@ const PostCreate = () => {
   const handleAddImg = e => {
     console.log(e);
   };
+  console.log('markdown', markdown);
   return (
     <div className="page page-postCreate">
       <MarkdownEditor

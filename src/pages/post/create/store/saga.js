@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Upload, Modal } from 'antd';
 /**
  * @author caiwenduio
  * @file 全局的saga
@@ -20,6 +20,10 @@ import {
   fetchPostAdd,
   fetchPostEdit,
 } from './service';
+import { effects as globalEffects } from '../../../../global/store/saga';
+import globalActions from '../../../../global/store/action';
+import { urlBase } from '../../../../utils/qiniuUpload';
+import { Notification } from '../../../../utils';
 
 function* loadClassify({ type, payload }) {
   const res = yield call(fetchClassify, payload);
@@ -37,12 +41,57 @@ function* loadPostDetail({ type, payload }) {
 
 function* loadSave({ payload }) {
   const {
-    app: { type, _id },
+    app: { type, _id, text, markdown },
   } = yield select(state => state.page_post_create_reducer);
+  console.log('text, markdown', text, markdown);
+  // const [resTextQiniu, resMarkdownQiniu] = yield [
+  //   call(globalEffects.upload, {
+  //     payload: new File([text], 'fileText.text', { type: 'text/plain' }),
+  //   }),
+  //   call(globalEffects.upload, {
+  //     payload: new File([markdown], 'fileMarkdown.text', {
+  //       type: 'text/plain',
+  //     }),
+  //   }),
+  // ];
+  const resTextQiniu = yield call(globalEffects.upload, {
+    payload: new File([text], 'fileText.text', { type: 'text/plain' }),
+  })
+  const resMarkdownQiniu = yield call(globalEffects.upload, {
+    payload: new File([markdown], 'fileMarkdown.text', {
+      type: 'text/plain',
+    }),
+  })
+  console.log('resTextQiniu', resTextQiniu);
+  console.log('resMarkdownQiniu', resMarkdownQiniu);
+  const fileTextUrl = `${urlBase}${resTextQiniu.key}`;
+  const fileMarkdownUrl = `${urlBase}${resMarkdownQiniu.key}`;
+  let imgUrl;
+  if (payload.imgFile.length > 0 && payload.imgFile[0].originFileObj) {
+    const resImgQiniu = yield call(
+      globalActions.upload,
+      payload.imgFile[0].originFileObj
+    );
+    imgUrl = `${urlBase}${resImgQiniu.key}?imageView2/1/w/120/h/120/interlace/1`;
+  }
+  if (payload.imgFile.length > 0 && !payload.imgFile[0].originFileObj) {
+    imgUrl = payload.imgFile[0].url;
+  }
+
+  const params = {
+    ...payload,
+    markdown: markdown,
+    text: text,
+    markdownUrl: fileMarkdownUrl,
+    textUrl: fileTextUrl,
+    imgUrl,
+    imgFile: undefined,
+    _id,
+  };
   const fetchRequest = type === 'edit' ? fetchPostEdit : fetchPostAdd;
-  yield put(actions.changeApp({ confirmLoading: true }));
-  const res = yield call(fetchRequest, payload);
-  yield put(actions.changeApp({ confirmLoading: false }));
+  yield put(actions.changeModal({ confirmLoading: true }));
+  const res = yield call(fetchRequest, params);
+  yield put(actions.changeModal({ confirmLoading: false }));
   if (res.success) {
     if (type === 'edit') {
       Notification.success('成功修改该文章！');
@@ -50,13 +99,13 @@ function* loadSave({ payload }) {
       Notification.success('成功发布该文章！');
     }
     yield put(actions.changeModal({ visible: false }));
-    yield put(actions.loadPostDetail({ _id }));
+    yield fork(actions.loadPostDetail({ _id }));
   }
 }
-function* globalSaga() {
+function* saga() {
   yield takeEvery(types.LOAD_POST_DETAIL, loadPostDetail);
   yield takeEvery(types.LOAD_CLASSIFY, loadClassify);
   yield takeEvery(types.LOAD_SAVE, loadSave);
 }
 
-export default globalSaga;
+export default saga;

@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Form, Select, Button, Input, Upload } from 'antd';
 import { Notification } from '../../../utils';
 import { imgeUrlStrArray } from '../../../utils';
-import { urlBase } from '../../../utils/qiniuUpload';
 import actions from './store/action';
-import globalActions from '../../../global/store/action';
 const Option = Select.Option;
 
 const ModalComponent = () => {
@@ -17,7 +15,7 @@ const ModalComponent = () => {
   };
   const {
     app: { markdown, text, type, _id },
-    modal: { visible, classifyData, confirmLoading },
+    modal: { visible, classifyData, confirmLoading, initForm },
   } = thisStore;
   const handleNext = async () => {
     if (!markdown) {
@@ -35,47 +33,16 @@ const ModalComponent = () => {
     form.resetFields();
   };
   const handleSubmit = () => {
-    form.validateFields(
-      ['title', 'classifyId', 'imgFile', 'introduction'],
-      async (error, values) => {
-        if (error) return;
-        const resTextQiniu = await dispatch(
-          globalActions.upload(
-            new File([text], 'fileText.text', { type: 'text/plain' })
-          )
-        );
-        const resMarkdownQiniu = await dispatch(
-          globalActions.upload(
-            new File([markdown], 'fileMarkdown.text', { type: 'text/plain' })
-          )
-        );
-        const fileTextUrl = `${urlBase}${resTextQiniu.key}`;
-        const fileMarkdownUrl = `${urlBase}${resMarkdownQiniu.key}`;
-        let imgUrl;
-        if (values.imgFile.length > 0 && values.imgFile[0].originFileObj) {
-          const resImgQiniu = await dispatch(
-            globalActions.upload(values.imgFile[0].originFileObj)
-          );
-          imgUrl = `${urlBase}${resImgQiniu.key}?imageView2/1/w/120/h/120/interlace/1`;
-        }
-        if (values.imgFile.length > 0 && !values.imgFile[0].originFileObj) {
-          imgUrl = values.imgFile[0].url;
-        }
-        setPropsModal({ confirmLoading: true });
+    form
+      .validateFields(['title', 'classifyId', 'imgFile', 'introduction'])
+      .then(values => {
+        console.log('values', values)
         dispatch(
           actions.loadSave({
             ...values,
-            markdown: markdown,
-            text: text,
-            markdownUrl: fileMarkdownUrl,
-            textUrl: fileTextUrl,
-            imgUrl,
-            imgFile: undefined,
-            _id,
           })
         );
-      }
-    );
+      });
   };
   const handlecCustomRequest = async params => {
     return params;
@@ -108,16 +75,17 @@ const ModalComponent = () => {
         width="500px"
       >
         <Form
+          form={form}
           onFinish={handleSubmit}
           initialValues={{
-            title: record.title,
-            classifyId: record.classifyId,
-            imgFile: imgeUrlStrArray(record.imgUrl),
+            title: initForm.title,
+            classifyId: initForm.classifyId,
+            imgFile: imgeUrlStrArray(initForm.imgUrl),
             introduction:
               type === 'edit'
-                ? record.introduction
-                : record.text
-                ? record.text.substr(0, 100)
+                ? initForm.introduction
+                : initForm.text
+                ? initForm.text.substr(0, 100)
                 : null,
           }}
         >

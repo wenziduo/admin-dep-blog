@@ -13,6 +13,7 @@ const initState = {
     _id: null,
   },
   modal: {
+    initForm: {},
     visible: false,
     classifyData: [],
     confirmLoading: false,
@@ -24,7 +25,7 @@ const reducer = (state = initState, { type, payload }) => {
     case types.CHANGE_APP:
       return { ...state, app: { ...state.app, ...payload } };
     case types.CHANGE_MODAL:
-      return { ...state, app: { ...state.modal, ...payload } };    
+      return { ...state, modal: { ...state.modal, ...payload } };    
     default:
       return state;
   }
