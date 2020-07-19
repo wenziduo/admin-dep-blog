@@ -1,0 +1,9 @@
+/**
+ * @author caiwenduio
+ * @file type
+ */
+
+const LOGIN_LOGIN = 'LOGIN_LOGIN';
+const LOGIN_CHANGE_CONFIRMLOADING = 'LOGIN_CHANGE_CONFIRMLOADING';
+
+export default { LOGIN_LOGIN, LOGIN_CHANGE_CONFIRMLOADING };

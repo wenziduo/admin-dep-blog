@@ -1,176 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { Card, Tabs, Table } from 'antd'
-import { EchartLine } from '../../component'
-import { fetchStatistics } from './service'
-import { columnsPv, columnsVv } from './columns'
+import React, { useEffect } from 'react';
+import { Card, Tabs, Table } from 'antd';
+import { EchartLine } from '../../component';
+import { columnsPv, columnsVv } from './columns';
+import { useDispatch, useSelector } from 'react-redux';
+import actions from './store/action';
 
 const Home = () => {
-  const newColumnsPv = columnsPv.call(this)
-  const newColumnsVv = columnsVv.call(this)
-  const [pv, setPv] = useState({
-    data: [],
-    page: 1,
-    pageSize: 10,
-    total: 0,
-    tableLoading: false,
-    echartData: [{
-      value: 200,
-      date: '2020-03-01'
-    }, {
-      value: 120,
-      date: '2020-03-02'
-    }, {
-      value: 250,
-      date: '2020-03-03'
-    }, {
-      value: 36,
-      date: '2020-03-04'
-    }, {
-      value: 99,
-      date: '2020-03-05'
-    }, {
-      value: 46,
-      date: '2020-03-06'
-    }, {
-      value: 260,
-      date: '2020-03-07'
-    }, {
-      value: 185,
-      date: '2020-03-08'
-    }, {
-      value: 164,
-      date: '2020-03-09'
-    }, {
-      value: 176,
-      date: '2020-03-10'
-    }, {
-      value: 200,
-      date: '2020-03-11'
-    }, {
-      value: 290,
-      date: '2020-03-12'
-    }]})
-  const [vv, setVv] = useState({
-    data: [],
-    page: 1,
-    pageSize: 10,
-    total: 0,
-    tableLoading: false,
-    echartData: [{
-      value: 200,
-      date: '2020-03-01'
-    }, {
-      value: 120,
-      date: '2020-03-02'
-    }, {
-      value: 250,
-      date: '2020-03-03'
-    }, {
-      value: 36,
-      date: '2020-03-04'
-    }, {
-      value: 99,
-      date: '2020-03-05'
-    }, {
-      value: 46,
-      date: '2020-03-06'
-    }, {
-      value: 260,
-      date: '2020-03-07'
-    }, {
-      value: 185,
-      date: '2020-03-08'
-    }, {
-      value: 164,
-      date: '2020-03-09'
-    }, {
-      value: 176,
-      date: '2020-03-10'
-    }, {
-      value: 200,
-      date: '2020-03-11'
-    }, {
-      value: 290,
-      date: '2020-03-12'
-    }],
-  })
-  const [tabsKey, setTabsKey] = useState('pv')
+  const dispatch = useDispatch();
+  const homeStore = useSelector(state => state.page_home_reducer);
+  const { pv, vv, tabsKey } = homeStore;
+  const newColumnsPv = columnsPv.call(this);
+  const newColumnsVv = columnsVv.call(this);
   useEffect(() => {
-    loadTableList()
-  }, [])
-  const loadStatistics = async () => {
-    const resp = await fetchStatistics()
-  }
+    loadTableList();
+  }, []);
   const loadTableList = () => {
     setTimeout(async () => {
       const params = {
-        type: tabsKey === 'pv' ? 0 : (tabsKey === 'vv' ? 1 : 0),
-        page: (tabsKey === 'pv' ? pv : (tabsKey === 'vv' ? vv : pv)).page,
-        pageSize: (tabsKey === 'pv' ? pv : (tabsKey === 'vv' ? vv : pv)).pageSize
-      }
-      if (tabsKey === 'pv') {
-        setPv({ ...pv, tableLoading: true })
-      }
-      if (tabsKey === 'vv') {
-        setVv({ ...vv, tableLoading: true })
-      }
-      const resp = await fetchStatistics(params)
-      if (tabsKey === 'pv') {
-        setPv({ ...pv, tableLoading: false })
-      }
-      if (tabsKey === 'vv') {
-        setVv({ ...vv, tableLoading: false })
-      }
-      if (resp.data) {
-        if (tabsKey === 'pv') {
-          setPv({
-            ...pv,
-            data: resp.data.data,
-            page: resp.data.page,
-            pageSize: resp.data.pageSize,
-            total: resp.data.total,
-          })
-        }
-        if (tabsKey === 'vv') {
-          setVv({
-            ...vv,
-            data: resp.data.data,
-            page: resp.data.page,
-            pageSize: resp.data.pageSize,
-            total: resp.data.total,
-          })
-        }
-      }
-    }, 0)
-  }
-  const handleChangeTabsKey = (e) => {
-    setTabsKey(e, loadTableList)
-  }
-  const handleChangePage = (page) => {
-    if (tabsKey === 'pv') {
-      setPv({ ...pv, page }, loadTableList)
-    }
-    if (tabsKey === 'vv') {
-      setVv({ ...vv, page }, loadTableList)
-    }
-  }
+        type: tabsKey === 'pv' ? 0 : tabsKey === 'vv' ? 1 : 0,
+        page: homeStore[tabsKey].page,
+        pageSize: homeStore[tabsKey].pageSize,
+      };
+      dispatch(actions.getPvVv(params));
+    }, 0);
+  };
+  const handleChangeTabsKey = tabsKey => {
+    dispatch(actions.changePvVv({ tabsKey }));
+    loadTableList();
+  };
+  const handleChangePage = page => {
+    dispatch(actions.changePvVv({ page }));
+    loadTableList();
+  };
   const handleChangePageSize = (pageSize, page) => {
-    if (tabsKey === 'pv') {
-      setPv({
-        ...pv,
-        page,
-        pageSize
-      }, loadTableList)
-    }
-    if (tabsKey === 'vv') {
-      setVv({
-        ...vv,
-        page,
-        pageSize
-      }, loadTableList)
-    }
-  }
-  const tableData = tabsKey === 'pv' ? pv : vv
+    dispatch(actions.changePvVv({ page, pageSize }));
+    loadTableList();
+  };
+  const tableData = homeStore[tabsKey];
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -181,20 +47,28 @@ const Home = () => {
             padding: 0,
             display: 'flex',
             flexDirection: 'column',
-          }}>
+          }}
+        >
           <strong>访问量统计图(PV)</strong>
           <div style={{ flex: 1 }}>
             <EchartLine data={pv.echartData} height="200px" />
           </div>
         </Card>
         <Card
-          style={{ margin: 0, padding: 0, flexBasis: '350px', flexShrink: 1, marginLeft: 20 }}
+          style={{
+            margin: 0,
+            padding: 0,
+            flexBasis: '350px',
+            flexShrink: 1,
+            marginLeft: 20,
+          }}
           bodyStyle={{
             margin: 10,
             padding: 0,
             display: 'flex',
             flexDirection: 'column',
-          }}>
+          }}
+        >
           <strong>访问量统计图(VV)</strong>
           <div style={{ flex: 1 }}>
             <EchartLine data={vv.echartData} height="200px" />
@@ -227,7 +101,7 @@ const Home = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

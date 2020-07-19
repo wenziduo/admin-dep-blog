@@ -3,11 +3,11 @@ import {
   Modal,
   Form,
   Select,
-  notification,
   Input,
   Upload,
   
 } from 'antd'
+import { Notification } from '../../../utils';
 import {
   fetchClassifyAdd,
   fetchClassifyEdit,
@@ -76,7 +76,7 @@ class ModalComponent extends React.Component {
         }
         this.setState({ confirmLoading: false })
         if (res.success) {
-          notification.success({
+          Notification.success({
             message: '操作提示',
             description: '操作成功！'
           })

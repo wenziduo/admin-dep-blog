@@ -1,44 +1,17 @@
-import React from 'react'
-import logo from './logo.svg'
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
-import Login from './pages/login'
-import Layout from './layout/Layout'
-import { ConfigProvider } from 'antd'
-import zhCN from 'antd/es/locale/zh_CN'
-import { routerData } from './utils/router'
-import './App.less'
+import React from 'react';
+import ReduxContainer from './ReduxContainer';
+import RouterContainer from './RouterContainer';
+import AntdContainer from './AntdContainer';
+import './App.less';
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN}>
-      <div className="App">
-        <Router>
-          <Switch>
-            <Route path="/login" component={Login} exact />
-            <Route
-              path="/"
-              component={
-                () => (
-                  <Layout>
-                    <Switch>
-                      {routerData.map(item => (
-                        <Route
-                          exact
-                          path={item.path}
-                          component={item.component}
-                          key={item.path}
-                        />
-                      ))}
-                    </Switch>
-                  </Layout>
-                )
-              }
-            />
-          </Switch>
-        </Router>
-      </div>
-    </ConfigProvider>
-  )
+    <ReduxContainer>
+      <AntdContainer>
+        <RouterContainer />
+      </AntdContainer>
+    </ReduxContainer>
+  );
 }
 
-export default App
+export default App;
