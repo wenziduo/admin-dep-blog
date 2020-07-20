@@ -61,6 +61,7 @@ const ModalComponent = () => {
     },
   };
   const fileList = form.getFieldValue('imgFile') || [];
+  console.log('fileList', fileList)
   return (
     <div style={{ textAlign: 'right', marginTop: 15 }}>
       <Button type="primary" onClick={handleNext}>
@@ -84,8 +85,8 @@ const ModalComponent = () => {
             introduction:
               type === 'edit'
                 ? initForm.introduction
-                : initForm.text
-                ? initForm.text.substr(0, 100)
+                : text
+                ? text.substr(0, 100)
                 : null,
           }}
         >

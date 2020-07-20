@@ -24,14 +24,14 @@ const Operate = ({ history }) => {
       page,
       pageSize,
     };
-    dispatch(actions.fetchPostList(params));
+    dispatch(actions.loadPostList(params));
   };
   const handleDel = record => {
     Modal.confirm({
       title: '操作提示',
       content: <span style={{ color: 'orangered' }}>是否删除该文章？</span>,
       onOk: () => {
-        return dispatch(actions.loadPostDelete({ _id: record._id }));
+        dispatch(actions.loadPostDelete({ _id: record._id }));
       },
     });
   };

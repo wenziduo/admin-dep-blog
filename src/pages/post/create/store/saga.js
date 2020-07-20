@@ -36,6 +36,13 @@ function* loadPostDetail({ type, payload }) {
   const res = yield call(fetchPostDetail, payload);
   if (res.success) {
     yield put(actions.changeApp({ markdown: res.data.markdown }));
+    yield put(actions.changeModal({ initForm: {
+      title: res.data.title,
+      classifyId: res.data.classifyId,
+      imgUrl: res.data.imgUrl,
+      introduction: res.data.introduction,
+      text: res.data.text,
+    } }));
   }
 }
 
@@ -44,24 +51,24 @@ function* loadSave({ payload }) {
     app: { type, _id, text, markdown },
   } = yield select(state => state.page_post_create_reducer);
   console.log('text, markdown', text, markdown);
-  // const [resTextQiniu, resMarkdownQiniu] = yield [
-  //   call(globalEffects.upload, {
-  //     payload: new File([text], 'fileText.text', { type: 'text/plain' }),
-  //   }),
-  //   call(globalEffects.upload, {
-  //     payload: new File([markdown], 'fileMarkdown.text', {
-  //       type: 'text/plain',
-  //     }),
-  //   }),
-  // ];
-  const resTextQiniu = yield call(globalEffects.upload, {
-    payload: new File([text], 'fileText.text', { type: 'text/plain' }),
-  })
-  const resMarkdownQiniu = yield call(globalEffects.upload, {
-    payload: new File([markdown], 'fileMarkdown.text', {
-      type: 'text/plain',
+  const [resTextQiniu, resMarkdownQiniu] = yield [
+    call(globalEffects.upload, {
+      payload: new File([text], 'fileText.text', { type: 'text/plain' }),
     }),
-  })
+    call(globalEffects.upload, {
+      payload: new File([markdown], 'fileMarkdown.text', {
+        type: 'text/plain',
+      }),
+    }),
+  ];
+  // const resTextQiniu = yield call(globalEffects.upload, {
+  //   payload: new File([text], 'fileText.text', { type: 'text/plain' }),
+  // })
+  // const resMarkdownQiniu = yield call(globalEffects.upload, {
+  //   payload: new File([markdown], 'fileMarkdown.text', {
+  //     type: 'text/plain',
+  //   }),
+  // })
   console.log('resTextQiniu', resTextQiniu);
   console.log('resMarkdownQiniu', resMarkdownQiniu);
   const fileTextUrl = `${urlBase}${resTextQiniu.key}`;

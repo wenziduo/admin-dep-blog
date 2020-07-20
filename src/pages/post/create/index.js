@@ -12,7 +12,7 @@ const PostCreate = () => {
   const dispatch = useDispatch();
   const thisStore = useSelector(state => state.page_post_create_reducer);
   const {
-    app: { markdown, text, isEdit },
+    app: { markdown, text, type },
   } = thisStore;
   const setPropsApp = args => {
     dispatch(actions.changeApp(args));
@@ -23,7 +23,7 @@ const PostCreate = () => {
   const handleDefault = async () => {
     const id = getUrlParam('id');
     setPropsApp({ type: id ? 'edit' : 'add', _id: id });
-    if (isEdit === 'edit') {
+    if (id) {
       dispatch(actions.loadPostDetail({ _id: id }));
       getText();
     }
