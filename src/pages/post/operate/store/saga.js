@@ -35,8 +35,8 @@ function* loadPostList({ type, payload }) {
 function* loadPostDelete({ type, payload }) {
   const {
     app: { page, pageSize },
-  } = yield select(satte => satte.page_post_operate_reducer);
-  const res = yield put(actions.loadPostDelete(payload));
+  } = yield select(state => state.page_post_operate_reducer);
+  const res = yield call(service.fetchPostDel, payload);
   if (res.success) {
     Notification.success('删除成功');
     yield put(actions.loadPostList({ page, pageSize }));
