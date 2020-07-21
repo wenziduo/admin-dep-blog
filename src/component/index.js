@@ -1,5 +1,5 @@
-import Preview from './Preview'
+import preview from './Preview'
 import EchartLine from './Echart/line'
 import Icon from './Icon'
 
-export { Preview, EchartLine, Icon }
+export { preview, EchartLine, Icon }

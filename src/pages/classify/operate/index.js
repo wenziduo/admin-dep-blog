@@ -5,6 +5,7 @@ import { columns } from './columns';
 import ModalForm from './modal';
 import actions from './store/action';
 import { fileTemplete } from '../../../utils';
+import { preview } from '../../../component';
 import './index.less';
 
 const Classify = () => {
@@ -55,6 +56,10 @@ const Classify = () => {
       <div>
         <Button type="primary" onClick={handleAdd}>
           新增
+        </Button>
+        &nbsp;&nbsp;
+        <Button type="primary" onClick={() => { preview.open().submit((res) => {console.log('res', res)}); }}>
+          弹窗
         </Button>
       </div>
       <div style={{ marginTop: 15 }}>
