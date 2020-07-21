@@ -36,13 +36,17 @@ function* loadPostDetail({ type, payload }) {
   const res = yield call(fetchPostDetail, payload);
   if (res.success) {
     yield put(actions.changeApp({ markdown: res.data.markdown }));
-    yield put(actions.changeModal({ initForm: {
-      title: res.data.title,
-      classifyId: res.data.classifyId,
-      imgUrl: res.data.imgUrl,
-      introduction: res.data.introduction,
-      text: res.data.text,
-    } }));
+    yield put(
+      actions.changeModal({
+        initForm: {
+          title: res.data.title,
+          classifyId: res.data.classifyId,
+          imgUrl: res.data.imgUrl,
+          introduction: res.data.introduction,
+          text: res.data.text,
+        },
+      })
+    );
   }
 }
 
@@ -61,16 +65,6 @@ function* loadSave({ payload }) {
       }),
     }),
   ];
-  // const resTextQiniu = yield call(globalEffects.upload, {
-  //   payload: new File([text], 'fileText.text', { type: 'text/plain' }),
-  // })
-  // const resMarkdownQiniu = yield call(globalEffects.upload, {
-  //   payload: new File([markdown], 'fileMarkdown.text', {
-  //     type: 'text/plain',
-  //   }),
-  // })
-  console.log('resTextQiniu', resTextQiniu);
-  console.log('resMarkdownQiniu', resMarkdownQiniu);
   const fileTextUrl = `${urlBase}${resTextQiniu.key}`;
   const fileMarkdownUrl = `${urlBase}${resMarkdownQiniu.key}`;
   let imgUrl;
@@ -106,7 +100,7 @@ function* loadSave({ payload }) {
       Notification.success('成功发布该文章！');
     }
     yield put(actions.changeModal({ visible: false }));
-    yield fork(actions.loadPostDetail({ _id }));
+    yield fork(actions.loadPostDetail, { _id });
   }
 }
 function* saga() {
