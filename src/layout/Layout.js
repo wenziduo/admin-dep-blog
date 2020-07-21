@@ -1,22 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { connect } from 'react-redux'
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Avatar,
-  Dropdown,
-  Modal,
-  message,
-  Spin,
-} from 'antd';
+import { Layout, Menu, Breadcrumb, Avatar, Dropdown, Modal, Spin } from 'antd';
 import { Icon } from '../component';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { menuData } from '../utils/menu';
 import { routerData } from '../utils/router';
-import { Preview } from '../component';
 import globalActions from '../global/store/action';
 const { Header, Sider, Content } = Layout;
 
@@ -68,7 +57,6 @@ function LayoutComponent({ history, children }) {
   );
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <Preview />
       <Layout>
         <Header
           style={{
@@ -187,7 +175,6 @@ const LayoutRouterComponent = withRouter(LayoutComponent);
 
 const IndexPage = ({ children }) => {
   const globalState = useSelector(state => state.global_reducer);
-  console.log('globalState', globalState);
   const { userInfo } = globalState;
   const isPassLayout = Object.keys(userInfo).length > 0;
   const dispatch = useDispatch();
